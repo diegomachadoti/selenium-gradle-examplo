@@ -1,0 +1,83 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+import org.apache.commons.io.FileUtils
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "commons-io:commons-io:2.4"
+    }
+}
+
+ext {
+    chromeDriverVersion = '2.24'
+    phantomJsVersion = '2.1.1'
+
+}
+
+task setupChromeDriver {
+    def driverOsFilenamePart
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        driverOsFilenamePart = "win32"
+    } else if (Os.isFamily(Os.FAMILY_MAC)) {
+        driverOsFilenamePart = "mac64"
+    } else if (Os.isFamily(Os.FAMILY_UNIX)) {
+        driverOsFilenamePart = Os.isArch("amd64") ? "linux64" : "linux32"
+    }
+
+    def downloadFile = file("$buildDir/webdriver/chromedriver.zip")
+    def outputDir = file("$buildDir/webdriver/chromedriver")
+
+    inputs.property("chromeDriverVersion", chromeDriverVersion)
+    outputs.dir(outputDir)
+
+    doFirst {
+        FileUtils.copyURLToFile(new URL("http://chromedriver.storage.googleapis.com/${chromeDriverVersion}/chromedriver_${driverOsFilenamePart}.zip"), downloadFile)
+        copy{
+            from(zipTree(downloadFile))
+            into(outputDir)
+        }
+    }
+}
+
+task setupPhantomJs {
+    def osFilenamePart
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        osFilenamePart = "windows.zip"
+    } else if (Os.isFamily(Os.FAMILY_MAC)) {
+        osFilenamePart = "macosx.zip"
+    } else if (Os.isFamily(Os.FAMILY_UNIX)) {
+        osFilenamePart = Os.isArch("amd64") ? "linux-x86_64.tar.bz2" : "linux-i686.tar.bz2"
+    }
+
+    def downloadFilename = "phantomjs-$phantomJsVersion-$osFilenamePart"
+    def downloadFile = file("$buildDir/webdriver/$downloadFilename")
+    def outputDir = file("$buildDir/webdriver/phantomjs")
+
+    inputs.property("phantomJsVersion", phantomJsVersion)
+    outputs.dir(outputDir)
+
+    doFirst {
+        FileUtils.copyURLToFile(new URL("https://bitbucket.org/ariya/phantomjs/downloads/$downloadFilename"), downloadFile)
+        copy{
+            from(Os.isFamily(Os.FAMILY_MAC) || Os.isFamily(Os.FAMILY_WINDOWS) ? zipTree(downloadFile) : tarTree(downloadFile))
+            into(outputDir)
+            eachFile { FileCopyDetails fcp ->
+                fcp.relativePath = new RelativePath(!fcp.directory, *fcp.relativePath.segments[1..-1])
+            }
+        }
+    }
+}
+
+task testChrome {
+    finalizedBy test
+    dependsOn setupChromeDriver
+    doLast { test { systemProperty 'webdriver.chrome.driver', "${buildDir}/webdriver/chromedriver/chromedriver${Os.isFamily(Os.FAMILY_WINDOWS)?'.exe':''}"}}
+}
+
+task testPhantomJs {
+    finalizedBy test
+    dependsOn setupPhantomJs
+    doLast { test { systemProperty 'phantomjs_binary_path', "$buildDir/webdriver/phantomjs/bin/phantomjs${Os.isFamily(Os.FAMILY_WINDOWS)?'.exe':''}" }}
+}
