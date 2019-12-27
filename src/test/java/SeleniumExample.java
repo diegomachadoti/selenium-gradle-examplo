@@ -6,6 +6,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -37,41 +38,20 @@ public class SeleniumExample {
     @Test()
     public void browserInitTest() throws InterruptedException {
 
-        for (int i = 1; i < 10000; i++) {
-            System.out.println("Votação: " + i);
-
-            driver.get("https://globoesporte.globo.com/mg/triangulo-mineiro/votacao/meu-gol-no-ge-futebol-contra-a-fome-43488f2c-d7fb-4327-9238-a4649302d036.ghtml");
-
-            //Scroll down the webpage by 4500 pixels
-            //driver.navigate().to("https://globoesporte.globo.com/mg/triangulo-mineiro/votacao/meu-gol-no-ge-futebol-contra-a-fome-43488f2c-d7fb-4327-9238-a4649302d036.ghtml");
+        for (int i = 1; i < 2; i++) {
+            driver.get("http://blog.qaninja.io/");
             Thread.sleep(2000);
-            JavascriptExecutor js = (JavascriptExecutor)driver;
-            js.executeScript("scrollBy(0, 4500)");
-            Thread.sleep(3000);
+            driver.findElement(new By.ByName("EMAIL")).sendKeys("deejaydiego@gmail.com");
+            driver.findElement(new By.ByClassName("ui button submit full-width")).click();
 
-
-            WebDriverWait wait = new WebDriverWait(driver, 12);
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(new By.ByXPath("//*[@id=\"main\"]/section[1]/div/div[2]/div[3]/div/div[1]/div/div[1]/div[1]/div[1]/a")));
-            Thread.sleep(5000);
-            driver.findElement(new By.ByXPath("//*[@id=\"main\"]/section[1]/div/div[2]/div[3]/div/div[1]/div/div[1]/div[1]/div[1]/a")).click();
-
-
-
-            Boolean m = new WebDriverWait(driver, 10)
-                    .until(ExpectedConditions.textToBePresentInElement(new By.ByClassName("gc__gSsvn"),	"CONFIRME SEU VOTO"));
-            Thread.sleep(2000);
-            driver.findElement(new By.ByClassName("gc__3_EfD")).click();
-
-            Thread.sleep(2000);
-            WebElement elementovotacaosucesso = driver.findElement(new By.ByClassName("glb-poll-feedback-option"));
-            if(elementovotacaosucesso.isEnabled()){
-                System.out.println("Tela de Sucesso");
-                driver.get("https://globoesporte.globo.com/mg/triangulo-mineiro/votacao/meu-gol-no-ge-futebol-contra-a-fome-43488f2c-d7fb-4327-9238-a4649302d036.ghtml");
+            WebElement EventoSucesso = driver.findElement(new By.ByXPath("//*[@id=\"ath-cta-capture-header\"]/div[1]/div"));
+            if(EventoSucesso.isEnabled()){
+                driver.get("http://blog.qaninja.io/artigos/");
                 Thread.sleep(2000);
-                JavascriptExecutor js2 = (JavascriptExecutor)driver;
-                js2.executeScript("scrollBy(0, 4500)");
-                Thread.sleep(4000);
-                System.out.println("Quantidade de votação realizada com sucesso para Gustavinho: " + i);
+                driver.findElement(new By.ByXPath("/html/body/section[1]/div/div[1]/div/div/nav/div/a[3]")).click();
+                driver.findElement(new By.ByXPath("/html/body/section[1]/div/div[2]/div/div[1]/div[1]/article")).click();
+                Assert.assertEquals("Automação", driver.findElement(By.tagName("/html/body/section[1]/div[2]/div[1]/div/div[1]/h4")).getText());
+                System.out.println("Sucesso.");
             }
 
             }

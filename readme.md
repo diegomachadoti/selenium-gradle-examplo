@@ -1,6 +1,7 @@
-#Instructions
+#Instruções
+**Qa ninja** projeto de teste que acessar a lista so site para receber conteúdos depois acessa a aparte de artigos de Automação a validando se o acesso ao primeiro curso disponível ocorreu com sucesso. <br/>
 
-## Quick Start
+## Começo
 
 1. Verifique se o JDK atual está instalado (nada mais é necessário - outras dependências serão baixadas automaticamente)
 
@@ -14,7 +15,7 @@
 ./gradlew testPhantomJs
 ```
 
-## Notes
+## Notas
 
 Ao executar a partir de Gradle - o script de compilação tentará baixar automaticamente os drivers específicos do SO necessários para Chrome ou PhatomJS e atualizar as variáveis de ambiente de requisitos - phantomjs.binary.path ou webdriver.chrome.driver
 
