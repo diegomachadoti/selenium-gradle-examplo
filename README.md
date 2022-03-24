@@ -1,5 +1,5 @@
 # Selenium Gradle Kotlin
-***Exemplo de projeto utilizando o gramework selenium webdriver e escrevendo teste de kotlin.***
+***Exemplo de projeto utilizando o framework selenium webdriver e escrevendo teste de kotlin.***
 
 
 ### Cenário de Exemplo
