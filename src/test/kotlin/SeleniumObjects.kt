@@ -1,6 +1,6 @@
 object SeleniumObjects {
 
-    val timeSleep = 1000L
+    val timeSleep = 1L
 
     /**
      * Valores
@@ -19,5 +19,7 @@ object SeleniumObjects {
     const val fielsPassById = "senha"
     const val btnEntrarById = "btn_login"
     const val textAlertByXpath = "/html/body/main/div[1]/div/div/div"
+
+    const val urlGitHub = "https://github.com/login"
 
 }

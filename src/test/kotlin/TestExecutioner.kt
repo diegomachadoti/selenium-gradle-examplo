@@ -1,30 +1,19 @@
 import io.github.bonigarcia.wdm.WebDriverManager
+import org.junit.jupiter.api.BeforeAll
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
 import java.util.concurrent.TimeUnit
 
 
-abstract class TestExecutioner(val browserMobile: Boolean = false) {
+abstract class TestExecutioner(private val browserMobile: Boolean = false) {
 
     internal var driver: WebDriver? = null
 
-    @BeforeMethod
+    @BeforeAll
     fun prepareTests() {
         driver = buildDriver()
-    }
-
-    @AfterMethod
-    fun closeBrowser() {
-        println("Finalizando teste e limpando os cookies")
-        if (!(driver as ChromeDriver).manage().cookies.isEmpty()) {
-            println("Removendo todos os cookies")
-            (driver as ChromeDriver).manage().deleteAllCookies()
-        }
-        println("Fechando o browser")
-        driver!!.quit()
     }
 
     protected fun buildDriver(): WebDriver {
@@ -44,9 +33,23 @@ abstract class TestExecutioner(val browserMobile: Boolean = false) {
             chromeOptions.setExperimentalOption("mobileEmulation", mobileEmulation)
         }
         val webDriver = ChromeDriver(chromeOptions)
-        webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-        webDriver.manage().window().maximize()
+        webDriver.manage()?.timeouts()?.implicitlyWait(10, TimeUnit.SECONDS)
+        webDriver.manage()?.window()?.maximize()
         return webDriver
     }
+
+    @AfterMethod
+    fun closeBrowser() {
+        println("Finalizando teste e limpando os cookies")
+        if (!(driver as ChromeDriver).manage().cookies.isEmpty()) {
+            println("Removendo todos os cookies")
+            (driver as ChromeDriver).manage().deleteAllCookies()
+        }
+        println("Fechando o browser")
+        driver!!.quit()
+    }
+
+
+
 
 }
