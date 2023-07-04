@@ -6,12 +6,12 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "commons-io:commons-io:2.4"
+        classpath "commons-io:commons-io:2.10.0"
     }
 }
 
 ext {
-    chromeDriverVersion = '2.24'
+    chromeDriverVersion = '92.0.4515.43'
     phantomJsVersion = '2.1.1'
 
 }
