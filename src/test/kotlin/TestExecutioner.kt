@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 abstract class TestExecutioner(private val browserMobile: Boolean = false) {
 
-    internal var driver: WebDriver? = null
+    var driver: WebDriver? = null
 
     @BeforeAll
     fun prepareTests() {
@@ -20,12 +20,7 @@ abstract class TestExecutioner(private val browserMobile: Boolean = false) {
         println("Inicializando WebDriver")
         WebDriverManager.chromedriver().setup()
         val chromeOptions = ChromeOptions()
-
-        chromeOptions.addArguments(
-            "--disable-gpu",
-            "--window-size=1920,1200",
-            "--ignore-certificate-errors"
-        )
+        chromeOptions.addArguments("--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors"))
 
         if(browserMobile) {
             val mobileEmulation: MutableMap<String, String> = HashMap()
@@ -33,10 +28,11 @@ abstract class TestExecutioner(private val browserMobile: Boolean = false) {
             chromeOptions.setExperimentalOption("mobileEmulation", mobileEmulation)
         }
         val webDriver = ChromeDriver(chromeOptions)
-        webDriver.manage()?.timeouts()?.implicitlyWait(10, TimeUnit.SECONDS)
-        webDriver.manage()?.window()?.maximize()
+        webDriver?.manage()?.timeouts()?.implicitlyWait(10, TimeUnit.SECONDS)
+        webDriver?.manage()?.window()?.maximize()
         return webDriver
     }
+
 
     @AfterMethod
     fun closeBrowser() {

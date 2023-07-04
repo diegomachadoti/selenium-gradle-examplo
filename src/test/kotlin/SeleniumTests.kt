@@ -46,7 +46,7 @@ class SeleniumTests: TestExecutioner() {
 	 */
 	@Test
 	fun `Acesso ao site link Nova Plataforma`() {
-		val wait = WebDriverWait(driver,  1000L)
+		val wait = WebDriverWait(driver,  Duration.ofSeconds(1))
 		driver?.get(url)
 		wait.until(ExpectedConditions.elementToBeClickable(driver?.findElement(ByXPath(btnNewPlatarfomByXpath)))).click()
 		val text = driver?.findElement(ByXPath(comboMsgByXpath))?.text
@@ -55,7 +55,7 @@ class SeleniumTests: TestExecutioner() {
 
 	@Test
 	fun `Login no site com senha inválida`() {
-		val wait = WebDriverWait(driver,  1000L)
+		val wait = WebDriverWait(driver,  Duration.ofSeconds(1))
 		driver?.get(url)
 		wait.until(ExpectedConditions.elementToBeClickable(driver?.findElement(ByXPath(btnLoginByXpath)))).click()
 		login(email = email, pass = pass)
@@ -69,7 +69,7 @@ class SeleniumTests: TestExecutioner() {
 	 */
 	@Test
 	fun `Login no gitbub com senha inválida`(){
-		val wait = WebDriverWait(driver,  1000L)
+		val wait = WebDriverWait(driver,  Duration.ofSeconds(1))
 		driver?.get(urlGitHub)
 		var sing = wait.until(ExpectedConditions.elementToBeClickable(driver?.findElement(ByXPath("//*[@id=\"login\"]/div[1]/h1")))).text
 		Assert.assertEquals(sing,"Sign in to GitHub")
@@ -92,7 +92,7 @@ class SeleniumTests: TestExecutioner() {
 	}
 
 	fun visibilityElementByXPath(element: String, tempo: Long) : WebElement{
-		val wait = WebDriverWait(driver, 1000L)
+		val wait = WebDriverWait(driver, Duration.ofSeconds(tempo))
 		val searchElements = driver!!.findElement(ByXPath(element))
 		wait.until(ExpectedConditions.visibilityOf(searchElements))
 		return searchElements
